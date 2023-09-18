@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext "Server=DELL-PABLO\sqlexpress;Database=fileDb;persist security info=True;Trusted_Connection=True;user id=sa;password=ade@D47@3a53;multipleactiveresultsets=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir fileModel -Context "AppDbContext" -UseDatabaseNames -NoPluralize -force
