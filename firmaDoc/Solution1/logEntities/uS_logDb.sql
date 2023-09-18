@@ -1,4 +1,4 @@
-create database logDb;
+create database uS_logDb;
 go
 use logDb;
 go

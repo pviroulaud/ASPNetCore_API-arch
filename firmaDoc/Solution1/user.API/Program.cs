@@ -1,4 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using userEntities.userModel;
+
+string origins = "_myAllowOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Buscar el Mapeo de objetos de la clase que hereda de Automapper.Profiles
+
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("userConnectionString")));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(origins,
+    builder =>
+    {
+        //builder.WithOrigins("*");
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
 
 // Add services to the container.
 

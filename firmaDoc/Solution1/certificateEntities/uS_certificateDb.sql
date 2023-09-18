@@ -1,4 +1,4 @@
-create database certificateDb;
+create database uS_certificateDb;
 go
 use certificateDb;
 go

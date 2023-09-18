@@ -1,4 +1,4 @@
-create database fileDb;
+create database uS_fileDb;
 go
 use fileDb;
 go
