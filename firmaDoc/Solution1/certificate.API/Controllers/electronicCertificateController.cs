@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace certificate.API.Controllers
+namespace certificateAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -38,7 +38,7 @@ namespace certificate.API.Controllers
         }
 
         // GET electronicCertificate/5
-        [HttpGet("/user/{id}")]
+        [HttpGet("user/{id}")]
         public async Task<ActionResult<readElectronicCertificateDTO>> GetUserId(int id)
         {
             var cer = await (from c in _context.electronicCertificate
@@ -90,7 +90,7 @@ namespace certificate.API.Controllers
         }
 
         // PUT api/<ValuesController>/5
-        [HttpPut("/revokeUser/{id}")]
+        [HttpPut("revokeUser/{id}")]
         public async Task<ActionResult> Put(int id)
         {
             var cer = await(from c in _context.electronicCertificate

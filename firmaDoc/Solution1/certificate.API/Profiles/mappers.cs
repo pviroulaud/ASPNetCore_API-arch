@@ -2,7 +2,7 @@
 using certificateDTO;
 using certificateEntities.certificateModel;
 
-namespace certificate.API.Profiles
+namespace certificateAPI.Profiles
 {
     public class mappers:Profile
     {
