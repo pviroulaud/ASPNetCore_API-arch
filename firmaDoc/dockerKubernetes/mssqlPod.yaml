@@ -27,3 +27,7 @@ spec:
               secretKeyRef:
                 name: mssql
                 key: SA_PASSWORD
+      volumes:
+      - name: mssqldb
+        persistentVolumeClaim:
+          claimName: pv-claim

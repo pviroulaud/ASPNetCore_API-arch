@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: usmssql-depl
+  name: mssql-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: usmssql
+      app: mssql
   template:
     metadata:
       labels:
-        app: usmssql
+        app: mssql
     spec:
       containers:
-        - name: usmssql
+        - name: mssql
           image: mcr.microsoft.com/mssql/server:2017-latest
           ports:
             - containerPort: 1433
@@ -22,7 +22,7 @@ spec:
             value: "Express"
           - name: ACCEPT_EULA
             value: "Y"
-          - name: SA_PASSWORD          
+          - name: SA_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: mssql
@@ -30,34 +30,21 @@ spec:
           volumeMounts:
           - mountPath: /var/opt/mssql/data
             name: mssqldb
-          - mountPath: /var/opt/mssql/log
-            name: mssqldblogs
-          - mountPath: /var/opt/mssql/secrets
-            name: mssqldbsecrets
       volumes:
       - name: mssqldb
-        hostPath:
-          path: /C/docker/db
-          type: Directory
-      - name: mssqldblogs
-        hostPath:
-          path: /C/docker/logs
-          type: Directory
-      - name: mssqldbsecrets
-        hostPath:
-          path: /C/docker/secrets
-          type: Directory
+        persistentVolumeClaim:
+          claimName: pv-claim
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: usmssql-clusterip-srv
+  name: mssql-clusterip-srv
 spec:
   type: ClusterIP
   selector:
-    app: usmssql
+    app: mssql
   ports:
-  - name: usmssql
+  - name: mssql
     protocol: TCP
     port: 1433
     targetPort: 1433
@@ -65,11 +52,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: usmssql-loadbalancer
+  name: mssql-loadbalancer
 spec:
   type: LoadBalancer
   selector:
-    app: usmssql
+    app: mssql
   ports:
   - protocol: TCP
     port: 1433
