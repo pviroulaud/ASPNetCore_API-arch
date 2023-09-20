@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssqlpod-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssqlpod
+  template:
+    metadata:
+      labels:
+        app: mssqlpod
+    spec:
+      containers:
+        - name: mssqlpod
+          image: mcr.microsoft.com/mssql/server:2019-CU14-ubuntu-20.04
+          ports:
+            - containerPort: 1433
+          env:
+          - name: MSSQL_PID
+            value: "Express"
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: SA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mssql
+                key: SA_PASSWORD

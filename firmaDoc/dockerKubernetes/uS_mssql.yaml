@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usmssql-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usmssql
+  template:
+    metadata:
+      labels:
+        app: usmssql
+    spec:
+      containers:
+        - name: usmssql
+          image: mcr.microsoft.com/mssql/server:2019-CU14-ubuntu-20.04
+          ports:
+            - containerPort: 1433
+          env:
+          - name: MSSQL_PID
+            value: "Express"
+          - name: ACCEPT_EULA
+            value: "Y"
+          - name: SA_PASSWORD          
+            valueFrom:
+              secretKeyRef:
+                name: mssql
+                key: SA_PASSWORD
+          volumeMounts:
+          - mountPath: /var/opt/mssql/data
+            name: mssqldb
+          - mountPath: /var/opt/mssql/log
+            name: mssqldblogs
+          - mountPath: /var/opt/mssql/secrets
+            name: mssqldbsecrets
+      volumes:
+      - name: mssqldb
+        hostPath:
+          path: /C/docker/db/data
+          type: Directory
+      - name: mssqldblogs
+        hostPath:
+          path: /C/docker/db/log
+          type: Directory
+      - name: mssqldbsecrets
+        hostPath:
+          path: /C/docker/db/secrets
+          type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usmssql-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: usmssql
+  ports:
+  - name: usmssql
+    protocol: TCP
+    port: 1433
+    targetPort: 1433
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usmssql-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: usmssql
+  ports:
+  - protocol: TCP
+    port: 1433
+    targetPort: 1433

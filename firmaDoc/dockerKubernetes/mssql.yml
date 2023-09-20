@@ -1,0 +1,15 @@
+#docker-compose up
+version: "3.7"
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-CU14-ubuntu-20.04
+    ports:
+      - 1433:1433
+    volumes:
+      - /c/docker/db/data:/var/opt/mssql/data
+      - /c/docker/db/log:/var/opt/mssql/log
+      - /c/docker/db/secrets:/var/opt/mssql/secrets
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=admIN123**
+

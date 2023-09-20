@@ -1,0 +1,7 @@
+kubectl create secret generic usmssql --from-literal=SA_PASSWORD="admIN123**"
+kubectl get services
+kubectl apply -f usmssql.yaml
+
+kubectl delete pod --all
+kubectl delete services --all
+kubectl delete deployment --all
