@@ -24,4 +24,6 @@ spec:
                 name: commands-clusterip-srv
                 port:
                   number: 80    
-#kubectl apply -f local-pvc.yaml
+#kubectl apply -f ingressgw.yaml
+
+#Este YAML arma el gateway de ingreso que actua como API Gateway, en la seccion "rules" se describe el ruteo de las peticiones entrantes

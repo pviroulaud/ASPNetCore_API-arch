@@ -13,15 +13,14 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Busc
 
 if (builder.Environment.IsProduction())
 {
-    Console.WriteLine(">>>Production Environment");
-    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("certificateKubernetesConnectionString")));
+    Console.WriteLine(">>> Production Environment");    
 }
 else
 {
-    Console.WriteLine(">>>Development Environment");
-    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("certificateConnectionString")));
+    Console.WriteLine(">>> Development Environment");    
 }
-
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("certificateConnectionString")));
+Console.WriteLine(">>>> Connecting to MSSQL via certificateConnectionString: " + builder.Configuration.GetConnectionString("certificateConnectionString"));
 
 builder.Services.AddCors(options =>
 {

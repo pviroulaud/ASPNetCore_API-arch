@@ -12,3 +12,7 @@ spec:
       port: 80
       targetPort: 80
 #kubectl apply -f certificateapi-nodeport.yaml      
+
+#Este NodePort Expone la api con el exterior del cluster de kubernetes, para ver el puerto expuesto se debe utilizar el comando
+#kubectl get services
+# identificar el NodePort certificateapi-np y ver el puerto expuesto 80:XXXXX generalmente XXXXX empieza con 3

@@ -8,4 +8,7 @@ spec:
   resources:
     requests:
       storage: 200Mi
+
+#kubectl apply -f local-pvc.yaml
+#Este YAML define el espacio de volumen donde se almacena la base de datos
  

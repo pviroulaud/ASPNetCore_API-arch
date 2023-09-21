@@ -19,8 +19,5 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "certificateAPI.dll"]
 
-#docker build -t certificateapi -f certificateapidocker .
-#docker run -p 8080:80 -d certificateapi
-
 #docker build -t pdviroulaud/certificateapi -f certificateapidocker .
-#docker push pdviroulaud/certificateapi
+#docker run -p 8080:80 -d certificateapi

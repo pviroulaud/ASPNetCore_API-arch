@@ -1,0 +1,80 @@
+{
+	"info": {
+		"_postman_id": "0a8322c3-6f0b-4de9-9e70-c2705e3652e4",
+		"name": "firmadoc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24625580"
+	},
+	"item": [
+		{
+			"name": "docker http://localhost:8080/electronicCertificate/user/1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/electronicCertificate/user/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"electronicCertificate",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "kubernets exposed nodeport http://localhost:30524/electronicCertificate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userName\": \"usr2\",\r\n  \"userId\": 2,\r\n  \"pass\": \"pass1\",\r\n  \"validDays\": 30\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:30524/electronicCertificate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "30524",
+					"path": [
+						"electronicCertificate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "kubernets exposed nodeport http://localhost:30524/electronicCertificate/user/1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:30524/electronicCertificate/user/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "30524",
+					"path": [
+						"electronicCertificate",
+						"user",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
