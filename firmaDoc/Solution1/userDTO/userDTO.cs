@@ -13,7 +13,7 @@
         public string email { get; set; } = null!;
     }
 
-    public class userPermitDTO :userDTO
+    public class userWithPermitDTO :userDTO
     {
         public List<permitDTO> permits { get; set; }
     }

@@ -11,4 +11,11 @@ namespace usersDTO
         public int id { get; set; }
         public string name { get; set; } = null!;
     }
+    public class userPermitDTO
+    {
+        public int userId { get; set; }
+        public int permitId { get; set; }
+        public bool enabled { get; set; }
+
+    }
 }

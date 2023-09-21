@@ -8,7 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Buscar el Mapeo de objetos de la clase que hereda de Automapper.Profiles
 
+if (builder.Environment.IsProduction())
+{
+    Console.WriteLine(">>> Production Environment");
+}
+else
+{
+    Console.WriteLine(">>> Development Environment");
+}
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("userConnectionString")));
+Console.WriteLine(">>>> Connecting to MSSQL via userConnectionString: " + builder.Configuration.GetConnectionString("userConnectionString"));
+
+
 
 builder.Services.AddCors(options =>
 {
@@ -36,7 +47,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

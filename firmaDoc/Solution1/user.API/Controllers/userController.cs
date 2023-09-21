@@ -6,7 +6,7 @@ using System.Runtime.ConstrainedExecution;
 using userEntities.userModel;
 using usersDTO;
 
-namespace users.API.Controllers
+namespace usersAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -33,7 +33,7 @@ namespace users.API.Controllers
 
         // GET electronicCertificate/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<userDTO>> Get(int id)
+        public async Task<ActionResult<userWithPermitDTO>> Get(int id)
         {
             var usr = await (from u in _context.user
                              where
@@ -43,8 +43,15 @@ namespace users.API.Controllers
             {
                 return NotFound(id);
             }
+            var us = _mapper.Map<userWithPermitDTO>(usr);
 
-            return Ok(_mapper.Map<userDTO>(usr));
+            us.permits = _mapper.Map<List<permitDTO>>(await (from p in _context.permit
+                                                      join up in _context.userPermits on p.id equals up.id
+                                                      where
+                                                      up.userId == usr.id
+                                                      select p).ToListAsync());
+
+            return Ok(us);
         }
 
       
@@ -56,7 +63,7 @@ namespace users.API.Controllers
             user usr = _mapper.Map<user>(value);
 
             _context.user.Add(usr);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Accepted(value);
         }

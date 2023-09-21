@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using System.ComponentModel.DataAnnotations;
 
-namespace file.API.Controllers
+namespace fileAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
@@ -56,9 +56,9 @@ namespace file.API.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("{cipher}/{userId}")]
 
-        public ActionResult uploadArchivo([Required(ErrorMessage = textDecorator.campoRequerido)] bool cipher)
+        public ActionResult uploadArchivo([Required(ErrorMessage = textDecorator.campoRequerido)] bool cipher,int userId)
         {
 
             //Variable que retorna el valor del resultado del metodo
@@ -138,6 +138,7 @@ namespace file.API.Controllers
                         arr = Cipher.EncriptarValorBytes(AES.ClaveDocumentos("999"), b64);
                     }
 
+                    nuevo.userId = userId;
                     nuevo.fileName = file.FileName;
                     nuevo.size = Convert.ToInt32(file.Length);
                     nuevo.content = arr;

@@ -27,15 +27,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "certificateEntities", "cert
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sign.API", "sign.API\sign.API.csproj", "{758DC3C4-2D77-4C23-8BAF-E5D593614280}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "file.API", "file.API\file.API.csproj", "{DFC2C727-8C19-4BB0-9787-0C712F7F4E54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fileAPI", "file.API\fileAPI.csproj", "{DFC2C727-8C19-4BB0-9787-0C712F7F4E54}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fileEntities", "fileEntities\fileEntities.csproj", "{7892E5A9-FCCF-44C1-A6F2-227ACA56A638}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "users.API", "user.API\users.API.csproj", "{7714EACB-4C80-4C1A-AD59-2B18E748925F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "usersAPI", "user.API\usersAPI.csproj", "{7714EACB-4C80-4C1A-AD59-2B18E748925F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "userEntities", "userEntities\userEntities.csproj", "{C0D5B313-6F23-4AD2-AEE5-A2B62BEE7D14}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "document.API", "document.API\document.API.csproj", "{3CDC435E-C8B5-42CB-BBDA-33771D0A5E34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "documentAPI", "document.API\documentAPI.csproj", "{3CDC435E-C8B5-42CB-BBDA-33771D0A5E34}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "documentEntities", "documentEntities\documentEntities.csproj", "{966BFE7B-D357-458D-B905-0431F415F0CD}"
 EndProject
@@ -58,6 +58,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "helpers.cipher", "helpers.cipher\helpers.cipher.csproj", "{67946EDF-3F0E-4DA7-AE39-79A5243B9902}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "usersDTO", "userDTO\usersDTO.csproj", "{4D6B3A8F-47FE-4EA0-B371-2BB5FC032C33}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "documentDTO", "documentDTO\documentDTO.csproj", "{E1076997-2D10-4C05-90A8-2397C62AC458}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +139,10 @@ Global
 		{4D6B3A8F-47FE-4EA0-B371-2BB5FC032C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D6B3A8F-47FE-4EA0-B371-2BB5FC032C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D6B3A8F-47FE-4EA0-B371-2BB5FC032C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1076997-2D10-4C05-90A8-2397C62AC458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1076997-2D10-4C05-90A8-2397C62AC458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1076997-2D10-4C05-90A8-2397C62AC458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1076997-2D10-4C05-90A8-2397C62AC458}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,6 +173,7 @@ Global
 		{81FF6822-93CD-4DE9-A774-79F94366FE7C} = {43385C5E-8D95-4797-A2AB-0FD1C3115689}
 		{67946EDF-3F0E-4DA7-AE39-79A5243B9902} = {43385C5E-8D95-4797-A2AB-0FD1C3115689}
 		{4D6B3A8F-47FE-4EA0-B371-2BB5FC032C33} = {5B1FEB78-84F3-461D-88CD-425D2B11CECD}
+		{E1076997-2D10-4C05-90A8-2397C62AC458} = {5B1FEB78-84F3-461D-88CD-425D2B11CECD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67569D5C-6980-41C5-B1D9-464A5714DF76}

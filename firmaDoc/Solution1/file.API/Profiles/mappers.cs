@@ -2,7 +2,7 @@
 using fileEntities.fileModel;
 using fileDTO;
 
-namespace log.API.Profiles
+namespace fileAPI.Profiles
 {
     public class mappers : Profile
     {

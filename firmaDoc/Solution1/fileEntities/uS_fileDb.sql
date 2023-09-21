@@ -1,6 +1,6 @@
 create database uS_fileDb;
 go
-use fileDb;
+use uS_fileDb;
 go
 create table userFile(
  id int not null identity(1,1) primary key,

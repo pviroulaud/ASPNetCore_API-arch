@@ -1,6 +1,38 @@
+using documentAPI.SyncServices;
+using documentEntities.documentModel;
+using Microsoft.EntityFrameworkCore;
+
+string origins = "_myAllowOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Buscar el Mapeo de objetos de la clase que hereda de Automapper.Profiles
+
+if (builder.Environment.IsProduction())
+{
+    Console.WriteLine(">>> Production Environment");
+}
+else
+{
+    Console.WriteLine(">>> Development Environment");
+}
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("documentConnectionString")));
+Console.WriteLine(">>>> Connecting to MSSQL via documentConnectionString: " + builder.Configuration.GetConnectionString("documentConnectionString"));
+
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(origins,
+    builder =>
+    {
+        //builder.WithOrigins("*");
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
+builder.Services.AddHttpClient<IHttpLocalClient, HttpLocalClient>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
