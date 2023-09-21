@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certificateapi-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certificateapi
+  template:
+    metadata:
+      labels:
+        app: certificateapi
+    spec:
+      containers:
+        - name: certificateapi
+          image: pdviroulaud/certificateapi:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: certificateapi-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: certificateapi
+  ports:
+  - name: certificateapi
+    protocol: TCP
+    port: 80
+    targetPort: 80
+#kubectl apply -f certificateapi-deploy.yaml    

@@ -1,6 +1,6 @@
 create database uS_certificateDb;
 go
-use certificateDb;
+use uS_certificateDb;
 go
 create table electronicCertificate(
 id int not null primary key identity (1,1),

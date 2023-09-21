@@ -95,7 +95,7 @@ namespace users.API.Controllers
                 return NotFound(id);
             }
 
-            var usPerm = from up in _context.userPermits where up.userId==id select up);
+            var usPerm = from up in _context.userPermits where up.userId==id select up;
             _context.userPermits.RemoveRange(usPerm);
             _context.SaveChanges();
 

@@ -11,7 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); // Buscar el Mapeo de objetos de la clase que hereda de Automapper.Profiles
 
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("certificateConnectionString")));
+if (builder.Environment.IsProduction())
+{
+    Console.WriteLine(">>>Production Environment");
+    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("certificateKubernetesConnectionString")));
+}
+else
+{
+    Console.WriteLine(">>>Development Environment");
+    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("certificateConnectionString")));
+}
+
 
 builder.Services.AddCors(options =>
 {
@@ -37,7 +47,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
