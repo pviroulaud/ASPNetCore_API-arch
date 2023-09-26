@@ -42,12 +42,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:30524/electronicCertificate",
+					"raw": "http://localhost:30872/electronicCertificate",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "30524",
+					"port": "30872",
 					"path": [
 						"electronicCertificate"
 					]
@@ -61,16 +61,341 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:30524/electronicCertificate/user/2",
+					"raw": "http://localhost:30872/electronicCertificate/user/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "30524",
+					"port": "30872",
 					"path": [
 						"electronicCertificate",
 						"user",
 						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "kubernets exposed nodeport http://localhost:30016/user/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:30016/user/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "30016",
+					"path": [
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost http://localhost:5062/userpermit/user/1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5062/userpermit/user/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5062",
+					"path": [
+						"userpermit",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "local fileAPI userFile",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "cipher",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"type": "file",
+							"src": "/E:/pdfDePrueba/Lorem20M.pdf"
+						},
+						{
+							"key": "userId",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "requireSign",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "documentId",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5037/userFile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5037",
+					"path": [
+						"userFile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "local userDocument",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "storeCipher",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"type": "file",
+							"src": "/E:/pdfDePrueba/Lorem20M.pdf"
+						},
+						{
+							"key": "userId",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "doc test 1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5160/userDocument",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5160",
+					"path": [
+						"userDocument"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acme userDocument",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "storeCipher",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"type": "file",
+							"src": "/E:/pdfDePrueba/Lorem20M.pdf"
+						},
+						{
+							"key": "userId",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "sign",
+							"value": "false",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "doc test 1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://acme.com/userDocument",
+					"protocol": "http",
+					"host": [
+						"acme",
+						"com"
+					],
+					"path": [
+						"userDocument"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acme user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://acme.com/user",
+					"protocol": "http",
+					"host": [
+						"acme",
+						"com"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acme userPermits",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://acme.com/userpermit/user/1",
+					"protocol": "http",
+					"host": [
+						"acme",
+						"com"
+					],
+					"path": [
+						"userpermit",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acme userPermits",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\":1,\r\n    \"permitId\":3,\r\n    \"enabled\":true\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://acme.com/userpermit/",
+					"protocol": "http",
+					"host": [
+						"acme",
+						"com"
+					],
+					"path": [
+						"userpermit",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acme user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nick\": \"usr1\",\r\n  \"email\": \"usr@test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://acme.com/user",
+					"protocol": "http",
+					"host": [
+						"acme",
+						"com"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acme userdocument",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://acme.com/userdocument/1",
+					"protocol": "http",
+					"host": [
+						"acme",
+						"com"
+					],
+					"path": [
+						"userdocument",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acme userdocument Download",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://acme.com/userdocument/1",
+					"protocol": "http",
+					"host": [
+						"acme",
+						"com"
+					],
+					"path": [
+						"userdocument",
+						"1"
 					]
 				}
 			},

@@ -56,9 +56,9 @@ namespace fileAPI.Controllers
         }
 
 
-        [HttpPost("{cipher}/{userId}")]
+        [HttpPost]
 
-        public ActionResult uploadArchivo([Required(ErrorMessage = textDecorator.campoRequerido)] bool cipher,int userId)
+        public ActionResult uploadArchivo([FromForm] syncDocumentInfoDTO docInfo)
         {
 
             //Variable que retorna el valor del resultado del metodo
@@ -132,18 +132,18 @@ namespace fileAPI.Controllers
                     byte[] arr = new byte[fs.Length];
                     fs.Read(arr, 0, (int)fs.Length);
 
-                    if (cipher)
+                    if (docInfo.cipher)
                     {
                         string b64 = Convert.ToBase64String(arr);
                         arr = Cipher.EncriptarValorBytes(AES.ClaveDocumentos("999"), b64);
                     }
 
-                    nuevo.userId = userId;
+                    nuevo.userId = docInfo.userId;
                     nuevo.fileName = file.FileName;
                     nuevo.size = Convert.ToInt32(file.Length);
                     nuevo.content = arr;
                     nuevo.contentType = file.ContentType;
-                    nuevo.cipher = cipher;
+                    nuevo.cipher = docInfo.cipher;
 
                     fs.Close();
 

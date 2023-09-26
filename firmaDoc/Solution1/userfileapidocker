@@ -1,0 +1,25 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["file.API/fileAPI.csproj", "file.API/"]
+COPY ["fileDTO/fileDTO.csproj", "fileDTO/"]
+COPY ["fileEntities/fileEntities.csproj", "fileEntities/"]
+COPY ["helpers.cipher/helpers.cipher.csproj", "helpers.cipher/"]
+COPY ["helpers.validations/helpers.validations.csproj", "helpers.validations/"]
+RUN dotnet restore "file.API/fileAPI.csproj"
+COPY . .
+WORKDIR "/src/file.API"
+RUN dotnet build "fileAPI.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "fileAPI.csproj" -c Release -o /app/publish 
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "fileAPI.dll"]
+
+#docker build -t pdviroulaud/userfileapi -f userfileapidocker .
+#docker run -p 8080:80 -d certificateapi
+#docker push pdviroulaud/userfileapi

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fileapi-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fileapi
+  template:
+    metadata:
+      labels:
+        app: fileapi
+    spec:
+      containers:
+        - name: fileapi
+          image: pdviroulaud/userfileapi:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fileapi-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: fileapi
+  ports:
+  - name: fileapi
+    protocol: TCP
+    port: 80
+    targetPort: 80
+#kubectl apply -f fileapi-deploy.yaml    

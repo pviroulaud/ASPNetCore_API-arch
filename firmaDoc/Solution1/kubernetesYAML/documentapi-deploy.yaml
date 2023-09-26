@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: documentapi-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: documentapi
+  template:
+    metadata:
+      labels:
+        app: documentapi
+    spec:
+      containers:
+        - name: documentapi
+          image: pdviroulaud/documentapi:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: documentapi-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: documentapi
+  ports:
+  - name: documentapi
+    protocol: TCP
+    port: 80
+    targetPort: 80
+#kubectl apply -f documentapi-deploy.yaml    

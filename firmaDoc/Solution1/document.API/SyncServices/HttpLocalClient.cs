@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text;
 using fileDTO;
+using System.Net.Http.Headers;
 
 namespace documentAPI.SyncServices
 {
@@ -51,7 +52,7 @@ namespace documentAPI.SyncServices
             //Encoding.UTF8,
             //"application/json");
 
-            string url = $"{_configuration["storageService"]}/{fileId}";
+            string url = $"{_configuration["storageService"]}/userFile/{fileId}";
 
             var response = await _httpClient.GetAsync(url);
 
@@ -73,6 +74,54 @@ namespace documentAPI.SyncServices
             {
                 return null;
             }
+        }
+
+        public async Task<int?> PostWithFile(syncDocumentInfoDTO msg, IFormFile file)
+        {
+            HttpResponseMessage response;
+
+            var formData = new MultipartFormDataContent();
+
+            byte[] arr= new byte[file.Length];
+            file.OpenReadStream().Read(arr, 0, arr.Length);
+            MemoryStream ms = new MemoryStream(arr);
+
+            HttpContent c = new StreamContent(ms);
+            c.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+            formData.Add(c, file.FileName, file.FileName);
+            formData.Add(new StringContent(msg.requireSign.ToString()), "requireSign");
+            formData.Add(new StringContent(msg.documentId.ToString()), "documentId");
+            formData.Add(new StringContent(msg.userId.ToString()), "userId");
+            formData.Add(new StringContent(msg.cipher.ToString()), "cipher");
+
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            string url = $"{_configuration["storageService"]}/userFile";
+
+            response = _httpClient.PostAsync(url, formData).Result;
+
+            
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    string respContent = await response.Content.ReadAsStringAsync();
+                    int userFileId = Convert.ToInt32(respContent);
+
+
+                    return userFileId;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+
         }
     }
 }

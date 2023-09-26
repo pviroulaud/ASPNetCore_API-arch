@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usersapi-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usersapi
+  template:
+    metadata:
+      labels:
+        app: usersapi
+    spec:
+      containers:
+        - name: usersapi
+          image: pdviroulaud/userapi:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: usersapi-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: usersapi
+  ports:
+  - name: usersapi
+    protocol: TCP
+    port: 80
+    targetPort: 80
+#kubectl apply -f usersapi-deploy.yaml    

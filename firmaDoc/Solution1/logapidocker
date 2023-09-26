@@ -1,0 +1,24 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["log.API/log.API.csproj", "log.API/"]
+COPY ["logDTO/logDTO.csproj", "logDTO/"]
+COPY ["logEntities/logEntities.csproj", "logEntities/"]
+RUN dotnet restore "log.API/log.API.csproj"
+COPY . .
+WORKDIR "/src/log.API"
+RUN dotnet build "log.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "log.API.csproj" -c Release -o /app/publish 
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "log.API.dll"]
+
+#docker build -t pdviroulaud/logapi -f logapidocker .
+#docker run -p 8080:80 -d logapi
+
+#docker push pdviroulaud/logapi

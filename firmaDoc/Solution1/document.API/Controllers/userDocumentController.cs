@@ -17,12 +17,14 @@ namespace documentAPI.Controllers
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly IHttpLocalClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-        public userDocumentController(AppDbContext context, IMapper mapper, IHttpLocalClient httpClient)
+        public userDocumentController(AppDbContext context, IMapper mapper, IHttpLocalClient httpClient, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
             _httpClient = httpClient;
+            _configuration = configuration;
         }
 
         [HttpGet("{userId}")]
@@ -59,18 +61,24 @@ namespace documentAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<userDocumentDTO>> Post(newUserDocumentDTO value)
+        public async Task<ActionResult<userDocumentDTO>> Post([FromForm] newUserDocumentDTO value)
         {
             // Get userPermits userService usersAPI-userPermitController-check SYNC
             bool auth = await _httpClient.checkUserPermit(value.userId, 1);
             bool authSign = true;
             if (value.sign)
             {
+                // Get userPermits userService usersAPI-userPermitController-check SYNC
                 authSign = await _httpClient.checkUserPermit(value.userId, 3);
             }
 
             if (auth && authSign)
             {
+                var file = Request.Form.Files.FirstOrDefault();
+                if ((file == null) || (file.Length <= 0))
+                {
+                    return BadRequest();
+                }
 
                 document doc = new document()
                 {
@@ -80,14 +88,49 @@ namespace documentAPI.Controllers
                 _context.document.Add(doc);
                 await _context.SaveChangesAsync();
 
-                var file = Request.Form.Files.FirstOrDefault();
-                if ((file == null) || (file.Length<=0))
+                
+                //string fileGuid = storeTempFile(file);
+
+                bool useSyncTransfer = Convert.ToBoolean(_configuration["syncFileTransfer"]);
+
+                if (useSyncTransfer)
                 {
-                    return BadRequest();
+                    syncDocumentInfoDTO docInfo = new syncDocumentInfoDTO()
+                    {
+                        cipher = value.storeCipher,
+                        requireSign = value.sign,
+                        userId = value.userId,
+                        documentId = doc.id
+                    };
+                    int? userFileId = await _httpClient.PostWithFile(docInfo, file);
+                    Console.WriteLine($">>> Send file to store sync.");
+
+                    if (userFileId != null)
+                    {
+                        doc.userFileId = userFileId;
+                        doc.userFileStorageDate = DateTime.Now;
+
+                        _context.document.Update(doc);
+                        _context.SaveChanges();
+                    }
+                    
                 }
-                string fileGuid = storeTempFile(file);
-                // Send RabbitMQ message to StorageService (fileAPI) ASYNC
-                Console.WriteLine($">>> Send Rabbit message to sotre file documentId: {doc.id}, userId: {doc.userId}, cipherFile: {value.storeCipher}, fileGUID: {fileGuid}, requireSign: {value.sign}");
+                else
+                {
+                    // Send RabbitMQ message to StorageService (fileAPI) ASYNC
+                    string rabbitMSG = "{";
+                    rabbitMSG += $"'documentId':{doc.id}," +
+                        $"'userId':{doc.userId}," +
+                        $"'cipherFile':{value.storeCipher}," +
+                        $"'requireSign':{value.sign}," +
+                        $"'b64File':'{Convert.ToBase64String(convertFileToByte(file))}'";
+                    rabbitMSG += "}";
+                    Console.WriteLine($">>> Send Rabbit message to store file: {rabbitMSG}");
+                }
+                
+
+
+               
 
             }
             else
@@ -179,5 +222,58 @@ namespace documentAPI.Controllers
             return nuevo.guid;
         }
 
+        private byte[] convertFileToByte(IFormFile file)
+        {
+            string NombreCarpeta = "/Archivos/";
+
+            //Variable donde se coloca la ruta raíz de la aplicacion
+            //para esto se emplea la variable "_env" antes de declarada
+            string RutaRaiz = AppDomain.CurrentDomain.BaseDirectory;// _env.ContentRootPath;
+
+            //Se concatena las variables "RutaRaiz" y "NombreCarpeta"
+            //en una otra variable "RutaCompleta"
+            string RutaCompleta = RutaRaiz + NombreCarpeta;
+
+
+            //Se valida con la variable "RutaCompleta" si existe dicha carpeta            
+            if (!Directory.Exists(RutaCompleta))
+            {
+                //En caso de no existir se crea esa carpeta
+                Directory.CreateDirectory(RutaCompleta);
+            }
+            var provider = new FileExtensionContentTypeProvider();
+
+
+            //Se declara en esta variable el nombre del archivo cargado
+            string NombreArchivo = file.FileName;
+
+            string guidTemporal = Guid.NewGuid().ToString() + ".tmp";
+            //Se declara en esta variable la ruta completa con el nombre del archivo
+            string RutaFullCompleta = Path.Combine(RutaCompleta, guidTemporal);
+
+            byte[] arr;
+
+            //Se crea una variable FileStream para carlo en la ruta definida
+            using (var stream = new FileStream(RutaFullCompleta, FileMode.Create))
+            {
+
+                file.CopyTo(stream);
+
+                FileStream fs = new FileStream(RutaFullCompleta, FileMode.Open);
+                arr = new byte[fs.Length];
+                fs.Read(arr, 0, (int)fs.Length);
+
+
+                fs.Close();
+
+            }
+
+
+            if (System.IO.File.Exists(RutaFullCompleta))
+            {
+                System.IO.File.Delete(RutaFullCompleta);
+            }
+            return arr;
+        }
     }
 }

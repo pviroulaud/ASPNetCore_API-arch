@@ -1,6 +1,6 @@
 create database uS_logDb;
 go
-use logDb;
+use uS_logDb;
 go
 create table errorLog(
 id int not null primary key identity(1,1),

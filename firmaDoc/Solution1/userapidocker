@@ -1,0 +1,23 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["user.API/usersAPI.csproj", "user.API/"]
+COPY ["userDTO/usersDTO.csproj", "userDTO/"]
+COPY ["userEntities/userEntities.csproj", "userEntities/"]
+RUN dotnet restore "user.API/usersAPI.csproj"
+COPY . .
+WORKDIR "/src/user.API"
+RUN dotnet build "usersAPI.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "usersAPI.csproj" -c Release -o /app/publish 
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "usersAPI.dll"]
+
+#docker build -t pdviroulaud/userapi -f userapidocker .
+#docker run -p 8080:80 -d pdviroulaud/userapi
+#docker push pdviroulaud/userapi

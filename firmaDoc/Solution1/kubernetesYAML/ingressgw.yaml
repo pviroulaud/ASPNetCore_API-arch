@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-gw
+  name: ingress-srv
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/use-regex: 'true'
@@ -10,20 +10,33 @@ spec:
     - host: acme.com
       http:
         paths:
-          - path: /api/platforms
+          - path: /user
             pathType: Prefix
             backend:
               service:
-                name: platforms-clusterip-srv
+                name: usersapi-clusterip
                 port:
                   number: 80
-          - path: /api/c/platforms
+          - path: /userpermit
             pathType: Prefix
             backend:
               service:
-                name: commands-clusterip-srv
+                name: usersapi-clusterip
                 port:
-                  number: 80    
+                  number: 80                  
+          - path: /userdocument
+            pathType: Prefix
+            backend:
+              service:
+                name: documentapi-clusterip
+                port:
+                  number: 80
+
+#kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 #kubectl apply -f ingressgw.yaml
 
-#Este YAML arma el gateway de ingreso que actua como API Gateway, en la seccion "rules" se describe el ruteo de las peticiones entrantes
+#Este YAML arma el gateway de ingreso que actua como API Gateway, en la seccion "rules" se describe el ruteo de las peticiones entrantes HACIA CADA CONTROLADOR DE CADA API
+# se tiene que repetir la seccion - path para cada controller que tenga una misma API.
+#Es necesario configurar el archivo hosts de la pc para que reconozca el sitio acme.com como local
+#C:\Windows\System32\drivers\etc
+#agregar 127.0.0.1 acme.com
