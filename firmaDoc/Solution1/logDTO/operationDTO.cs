@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace logDTO
 {
     public class operationDTO
-    {
+    {        
         public int id { get; set; }
         public int? userId { get; set; }
         public int operationId { get; set; }

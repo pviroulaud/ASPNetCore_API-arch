@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace fileDTO
 {
-    public class rabbitMqFileTransferDTO : userFileDTO
+    public class rabbitMqFileTransferDTO: syncDocumentInfoDTO
     {
-        public int documentId { get; set; }
-        public bool requireSign { get; set; }
-      
+        public string b64File { get; set; }
+
     }
 
     public class syncDocumentInfoDTO

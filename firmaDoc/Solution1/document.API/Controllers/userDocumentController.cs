@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using documentAPI.AsyncServices;
 using documentAPI.SyncServices;
 using documentDTO;
 using documentEntities.documentModel;
 using fileDTO;
+using logDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
@@ -18,19 +20,35 @@ namespace documentAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IHttpLocalClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly IRabbitMQClient<operationDTO> _rabbitLogClient;
 
-        public userDocumentController(AppDbContext context, IMapper mapper, IHttpLocalClient httpClient, IConfiguration configuration)
+        public userDocumentController(AppDbContext context, 
+            IMapper mapper, 
+            IHttpLocalClient httpClient, 
+            IConfiguration configuration,
+            IRabbitMQClient<operationDTO> rabbitLogClient)
         {
             _context = context;
             _mapper = mapper;
             _httpClient = httpClient;
             _configuration = configuration;
+            _rabbitLogClient = rabbitLogClient;
         }
 
         [HttpGet("{userId}")]
         public async Task<ActionResult<List<userDocumentDTO>>> Get(int userId)
         {
             var usrDoc = await (from d in _context.document where d.userId == userId select d).ToListAsync();
+
+            _rabbitLogClient.sendMessage(new operationDTO()
+            { 
+                userId = 99, 
+                entity = "Documentos", 
+                operationDate = DateTime.Now, 
+                operationId = 4, 
+                description = $"Consulta de documentos del usuario {userId}" 
+            }
+            );
 
             return Ok(_mapper.Map<List<userDocumentDTO>>(usrDoc));
         }
@@ -121,7 +139,7 @@ namespace documentAPI.Controllers
                     string rabbitMSG = "{";
                     rabbitMSG += $"'documentId':{doc.id}," +
                         $"'userId':{doc.userId}," +
-                        $"'cipherFile':{value.storeCipher}," +
+                        $"'cipher':{value.storeCipher}," +
                         $"'requireSign':{value.sign}," +
                         $"'b64File':'{Convert.ToBase64String(convertFileToByte(file))}'";
                     rabbitMSG += "}";

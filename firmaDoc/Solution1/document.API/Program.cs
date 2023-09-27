@@ -1,5 +1,7 @@
+using documentAPI.AsyncServices;
 using documentAPI.SyncServices;
 using documentEntities.documentModel;
+using logDTO;
 using Microsoft.EntityFrameworkCore;
 
 string origins = "_myAllowOrigins";
@@ -33,6 +35,10 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHttpClient<IHttpLocalClient, HttpLocalClient>();
+builder.Services.AddSingleton<IRabbitMQClient<operationDTO>, RabbitMQClient<operationDTO>>(
+                                            serviceProvider => new RabbitMQClient<operationDTO>(
+                                                    configuration: serviceProvider.GetRequiredService<IConfiguration>(),
+                                                    exchangeName: "log"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

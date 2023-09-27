@@ -37,5 +37,7 @@ INSERT [dbo].operation ([id], [name], [description]) VALUES (2, N'Baja',N'Baja')
 GO
 INSERT [dbo].operation ([id], [name], [description]) VALUES (3, N'Modificación',N'Modificación')
 GO
+INSERT [dbo].operation ([id], [name], [description]) VALUES (4, N'Consulta',N'Consulta')
+GO
 SET IDENTITY_INSERT [dbo].operation OFF
 GO
