@@ -9,8 +9,10 @@ namespace log.API.Profiles
         public mappers()
         {
             CreateMap<errorDTO, errorLog>();
+            CreateMap<errorLog, errorDTO>();
 
             CreateMap<operationDTO, operationLog>();
+            CreateMap<operationLog, operationDTO>();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace log.API.AsyncServices
 {
-    public interface IEventProcessor<T>
+    public interface IEventProcessor
     {
         void ProcessEvent(string message);
     }

@@ -1,7 +1,11 @@
 ﻿namespace logDTO
 {
-    public class errorDTO
+    public class errorDTO:messageTypeDTO
     {
+        public errorDTO()
+        {
+            base.messageType="errorLog";
+        }
         public int id { get; set; }
         public int? userId { get; set; }
         public string? location { get; set; }

@@ -21,6 +21,7 @@ namespace log.API.AsyncServices
             _configuration = configuration;
             _exchangeName = exchangeName;
             _eventProcessor = eventProcessor;
+            InitializeRabbitMQ();
 
         }
         private void InitializeRabbitMQ()

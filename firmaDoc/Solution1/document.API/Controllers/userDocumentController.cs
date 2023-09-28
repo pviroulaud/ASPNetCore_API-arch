@@ -46,7 +46,7 @@ namespace documentAPI.Controllers
                 entity = "Documentos", 
                 operationDate = DateTime.Now, 
                 operationId = 4, 
-                description = $"Consulta de documentos del usuario {userId}" 
+                description = $"Consulta de documentos del usuario {userId}"
             }
             );
 
