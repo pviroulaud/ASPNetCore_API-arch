@@ -10,6 +10,9 @@ namespace fileDTO
     {
         public string b64File { get; set; }
 
+        public string fileName { get; set; } = null!;
+        public string contentType { get; set; } = null!;
+        public int size { get; set; }
     }
 
     public class syncDocumentInfoDTO

@@ -18,4 +18,4 @@ kubectl delete services ingress-nginx-controller-admission --namespace=ingress-n
 kubectl delete services rabbitmq-clusterip-srv
 kubectl delete services rabbitmq-loadbalancer
 
-kubectl delete ingress ingress-gw
+kubectl delete ingress ingress-srv

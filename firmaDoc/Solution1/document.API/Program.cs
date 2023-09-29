@@ -1,6 +1,7 @@
 using documentAPI.AsyncServices;
 using documentAPI.SyncServices;
 using documentEntities.documentModel;
+using fileDTO;
 using logDTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,6 +40,17 @@ builder.Services.AddSingleton<IRabbitMQClient<operationDTO>, RabbitMQClient<oper
                                             serviceProvider => new RabbitMQClient<operationDTO>(
                                                     configuration: serviceProvider.GetRequiredService<IConfiguration>(),
                                                     exchangeName: "log"));
+builder.Services.AddSingleton<IRabbitMQClient<errorDTO>, RabbitMQClient<errorDTO>>(
+                                            serviceProvider => new RabbitMQClient<errorDTO>(
+                                                    configuration: serviceProvider.GetRequiredService<IConfiguration>(),
+                                                    exchangeName: "errorLog"));
+builder.Services.AddSingleton<IRabbitMQClient<rabbitMqFileTransferDTO>, RabbitMQClient<rabbitMqFileTransferDTO>>(
+                                            serviceProvider => new RabbitMQClient<rabbitMqFileTransferDTO>(
+                                                    configuration: serviceProvider.GetRequiredService<IConfiguration>(),
+                                                    exchangeName: "file"));
+
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+builder.Services.AddHostedService<RabbitMQFileInfoSubscriber>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

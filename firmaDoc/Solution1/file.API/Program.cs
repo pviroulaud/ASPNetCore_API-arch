@@ -1,3 +1,5 @@
+using documentDTO;
+using fileAPI.AsyncServices;
 using fileEntities.fileModel;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +24,16 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddSingleton<IRabbitMQClient<userDocumentDTO>, RabbitMQClient<userDocumentDTO>>(
+                                            serviceProvider => new RabbitMQClient<userDocumentDTO>(
+                                                    configuration: serviceProvider.GetRequiredService<IConfiguration>(),
+                                                    exchangeName: "fileInfo"));
+
+
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+builder.Services.AddHostedService<RabbitMQFileSubscriber>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

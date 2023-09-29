@@ -6,6 +6,7 @@ COPY ["document.API/documentAPI.csproj", "document.API/"]
 COPY ["documentDTO/documentDTO.csproj", "documentDTO/"]
 COPY ["documentEntities/documentEntities.csproj", "documentEntities/"]
 COPY ["fileDTO/fileDTO.csproj", "fileDTO/"]
+COPY ["logDTO/logDTO.csproj", "logDTO/"]
 RUN dotnet restore "document.API/documentAPI.csproj"
 COPY . .
 WORKDIR "/src/document.API"

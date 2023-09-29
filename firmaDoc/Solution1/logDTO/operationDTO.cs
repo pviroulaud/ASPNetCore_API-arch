@@ -12,7 +12,6 @@ namespace logDTO
         {
             base.messageType="operationLog";
         }
-        public int id { get; set; }
         public int? userId { get; set; }
         public int operationId { get; set; }
         public DateTime operationDate { get; set; }

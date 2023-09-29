@@ -21,18 +21,24 @@ namespace documentAPI.Controllers
         private readonly IHttpLocalClient _httpClient;
         private readonly IConfiguration _configuration;
         private readonly IRabbitMQClient<operationDTO> _rabbitLogClient;
+        private readonly IRabbitMQClient<errorDTO> _rabbitMQErrorClient;
+        private readonly IRabbitMQClient<rabbitMqFileTransferDTO> _rabbitMQFileClient;
 
         public userDocumentController(AppDbContext context, 
             IMapper mapper, 
             IHttpLocalClient httpClient, 
             IConfiguration configuration,
-            IRabbitMQClient<operationDTO> rabbitLogClient)
+            IRabbitMQClient<operationDTO> rabbitLogClient,
+            IRabbitMQClient<errorDTO> rabbitMQErrorClient,
+            IRabbitMQClient<rabbitMqFileTransferDTO> rabbitMQFileClient)
         {
             _context = context;
             _mapper = mapper;
             _httpClient = httpClient;
             _configuration = configuration;
             _rabbitLogClient = rabbitLogClient;
+            _rabbitMQErrorClient = rabbitMQErrorClient;
+            _rabbitMQFileClient = rabbitMQFileClient;
         }
 
         [HttpGet("{userId}")]
@@ -43,13 +49,22 @@ namespace documentAPI.Controllers
             _rabbitLogClient.sendMessage(new operationDTO()
             { 
                 userId = 99, 
-                entity = "Documentos", 
+                entity = "documents", 
                 operationDate = DateTime.Now, 
                 operationId = 4, 
                 description = $"Consulta de documentos del usuario {userId}"
             }
             );
 
+            //_rabbitMQErrorClient.sendMessage(new errorDTO()
+            //{
+            //    errorCode= 0,
+            //    errorDate= DateTime.Now,
+            //    detail="test Error",
+            //    location= "documentAPI",
+            //    _params=userId.ToString(),
+            //    userId=0
+            //});
             return Ok(_mapper.Map<List<userDocumentDTO>>(usrDoc));
         }
 
@@ -64,6 +79,15 @@ namespace documentAPI.Controllers
                 userFileDTO? usFile = await _httpClient.getFile(fileId);
                 if (usFile != null) 
                 {
+                    _rabbitLogClient.sendMessage(new operationDTO()
+                    {
+                        userId = 99,
+                        entity = "userDocuments",
+                        operationDate = DateTime.Now,
+                        operationId = 4,
+                        description = $"Descarga de documento. usuario:{userId}, archivo:{fileId}"
+                    });
+
                     return Ok(usFile);
                 }
                 else
@@ -96,7 +120,7 @@ namespace documentAPI.Controllers
                 if ((file == null) || (file.Length <= 0))
                 {
                     return BadRequest();
-                }
+                }                
 
                 document doc = new document()
                 {
@@ -106,7 +130,15 @@ namespace documentAPI.Controllers
                 _context.document.Add(doc);
                 await _context.SaveChangesAsync();
 
-                
+                _rabbitLogClient.sendMessage(new operationDTO()
+                {
+                    userId = 99,
+                    entity = "userDocuments",
+                    operationDate = DateTime.Now,
+                    operationId = 1,
+                    description = $"Nuevo documento. usuario:{value.userId}, documento:{doc.id}"
+                });
+
                 //string fileGuid = storeTempFile(file);
 
                 bool useSyncTransfer = Convert.ToBoolean(_configuration["syncFileTransfer"]);
@@ -122,6 +154,14 @@ namespace documentAPI.Controllers
                     };
                     int? userFileId = await _httpClient.PostWithFile(docInfo, file);
                     Console.WriteLine($">>> Send file to store sync.");
+                    _rabbitLogClient.sendMessage(new operationDTO()
+                    {
+                        userId = 99,
+                        entity = "userDocuments",
+                        operationDate = DateTime.Now,
+                        operationId = 1,
+                        description = $"Envio sincronico de archivo. usuario:{value.userId}, documento:{doc.id}"
+                    });
 
                     if (userFileId != null)
                     {
@@ -130,6 +170,15 @@ namespace documentAPI.Controllers
 
                         _context.document.Update(doc);
                         _context.SaveChanges();
+
+                        _rabbitLogClient.sendMessage(new operationDTO()
+                        {
+                            userId = 99,
+                            entity = "userDocuments",
+                            operationDate = DateTime.Now,
+                            operationId = 1,
+                            description = $"Respuesta de envio sincronico de archivo. archivo:{doc.userFileId}, documento:{doc.id}"
+                        });
                     }
                     
                 }
@@ -144,6 +193,20 @@ namespace documentAPI.Controllers
                         $"'b64File':'{Convert.ToBase64String(convertFileToByte(file))}'";
                     rabbitMSG += "}";
                     Console.WriteLine($">>> Send Rabbit message to store file: {rabbitMSG}");
+
+                    rabbitMqFileTransferDTO msg = new rabbitMqFileTransferDTO()
+                    {
+                        documentId = doc.id,
+                        userId = doc.userId,
+                        cipher = value.storeCipher,
+                        requireSign = value.sign,
+                        b64File = Convert.ToBase64String(convertFileToByte(file)),
+                        contentType=file.ContentType,
+                        fileName=file.FileName,
+                        size=(int)file.Length
+                    };
+
+                    _rabbitMQFileClient.sendMessage(msg);
                 }
                 
 
@@ -277,12 +340,18 @@ namespace documentAPI.Controllers
 
                 file.CopyTo(stream);
 
-                FileStream fs = new FileStream(RutaFullCompleta, FileMode.Open);
-                arr = new byte[fs.Length];
-                fs.Read(arr, 0, (int)fs.Length);
+                arr = new byte[stream.Length];
+                //stream.Read(arr, 0, (int)stream.Length);
+
+                //byte[] arr = new byte[file.Length];
+                file.OpenReadStream().Read(arr, 0, arr.Length);
+                //FileStream fs = new FileStream(RutaFullCompleta, FileMode.Open);
+
+                //fs.Read(arr, 0, (int)fs.Length);
 
 
-                fs.Close();
+                //fs.Close();
+                stream.Close();
 
             }
 

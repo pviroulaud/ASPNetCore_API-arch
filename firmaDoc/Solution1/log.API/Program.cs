@@ -1,4 +1,5 @@
 using log.API.AsyncServices;
+using log.API.Repositories;
 using logEntities.logModel;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,14 +25,18 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
-builder.Services.AddHostedService<RabbitMQSubscriber>(serviceProvider=> new RabbitMQSubscriber(
-                                                    configuration: serviceProvider.GetRequiredService<IConfiguration>(),
-                                                    eventProcessor: serviceProvider.GetRequiredService<IEventProcessor>(),
-                                                    exchangeName: "log"));
-builder.Services.AddHostedService<RabbitMQSubscriber>(serviceProvider=> new RabbitMQSubscriber(
-                                                    configuration: serviceProvider.GetRequiredService<IConfiguration>(),
-                                                    eventProcessor: serviceProvider.GetRequiredService<IEventProcessor>(),
-                                                    exchangeName: "errorLog"));
+builder.Services.AddSingleton<ILogRepository, LogRepository>();
+
+
+builder.Services.AddHostedService<RabbitMQLogSubscriber>(serviceProvider => new RabbitMQLogSubscriber(
+    configuration:serviceProvider.GetRequiredService<IConfiguration>(),
+    eventProcessor:serviceProvider.GetRequiredService<IEventProcessor>(),
+    context:serviceProvider.GetRequiredService<ILogRepository>()));
+
+builder.Services.AddHostedService<RabbitMQErrorSubscriber>(serviceProvider => new RabbitMQErrorSubscriber(
+    configuration: serviceProvider.GetRequiredService<IConfiguration>(),
+    eventProcessor: serviceProvider.GetRequiredService<IEventProcessor>(),
+    context: serviceProvider.GetRequiredService<ILogRepository>()));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
