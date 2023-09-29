@@ -196,7 +196,7 @@
 						},
 						{
 							"key": "title",
-							"value": "doc test 1",
+							"value": "doc test AS",
 							"type": "text"
 						}
 					]
@@ -245,7 +245,7 @@
 						},
 						{
 							"key": "title",
-							"value": "doc test 1",
+							"value": "doc test store rabbit",
 							"type": "text"
 						}
 					]
@@ -387,7 +387,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://acme.com/userdocument/1",
+					"raw": "http://acme.com/userdocument/download/2/1",
 					"protocol": "http",
 					"host": [
 						"acme",
@@ -395,6 +395,8 @@
 					],
 					"path": [
 						"userdocument",
+						"download",
+						"2",
 						"1"
 					]
 				}
